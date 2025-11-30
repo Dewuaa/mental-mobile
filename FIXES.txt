@@ -1,0 +1,23 @@
+// Script to fix SafeAreaView imports across all screens
+// This file documents the changes needed
+
+/*
+CHANGES TO MAKE:
+
+1. Replace all SafeAreaView imports from 'react-native' with:
+   import { SafeAreaView } from 'react-native-safe-area-context';
+
+2. Add edges prop to all SafeAreaView components:
+   <SafeAreaView style={styles.container} edges={['top', 'bottom']}>
+
+FILES TO UPDATE:
+- DashboardScreen.tsx
+- AIChatScreen.tsx  
+- ExercisesScreen.tsx
+- CommunityScreen.tsx
+- TherapistsScreen.tsx
+- ProfileScreen.tsx
+- CrisisScreen.tsx
+- OnboardingScreen.tsx
+- SettingsScreen.tsx ✓ (DONE)
+*/
