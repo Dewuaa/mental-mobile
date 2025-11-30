@@ -19,6 +19,7 @@ import ToolsScreen from '../screens/ToolsScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import CrisisScreen from '../screens/CrisisScreen';
 import SettingsScreen from '../screens/SettingsScreen';
+import SleepSoundsScreen from '../screens/SleepSoundsScreen';
 import { useTheme } from '../contexts/ThemeContext';
 
 const Stack = createStackNavigator<RootStackParamList>();

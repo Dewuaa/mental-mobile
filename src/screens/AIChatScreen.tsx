@@ -19,8 +19,11 @@ import { sendMessageToGemini } from '../services/geminiService';
 import { chatStorage } from '../services/storageService';
 import { Message } from '../types';
 import { useFadeIn } from '../utils/animations';
+import { detectCrisis } from '../utils/crisisDetection';
+import { ChatPrompts } from '../components/ChatPrompts';
+import { CrisisAlertModal } from '../components/CrisisAlertModal';
 
-const AIChatScreen: React.FC = () => {
+const AIChatScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
   const [input, setInput] = useState('');
   const [messages, setMessages] = useState<Message[]>([
     {
@@ -31,6 +34,8 @@ const AIChatScreen: React.FC = () => {
     },
   ]);
   const [isLoading, setIsLoading] = useState(false);
+  const [showCrisisAlert, setShowCrisisAlert] = useState(false);
+  const [crisisData, setCrisisData] = useState<any>(null);
   const flatListRef = useRef<FlatList>(null);
   
   const { opacity: fadeOpacity } = useFadeIn(600, 0);
@@ -62,6 +67,13 @@ const AIChatScreen: React.FC = () => {
       timestamp: new Date(),
     };
 
+    // Check for crisis content
+    const crisisResult = detectCrisis(input);
+    if (crisisResult.isCrisis) {
+      setCrisisData(crisisResult);
+      setShowCrisisAlert(true);
+    }
+
     setMessages((prev) => [...prev, userMsg]);
     setInput('');
     setIsLoading(true);
@@ -85,6 +97,10 @@ const AIChatScreen: React.FC = () => {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleSelectPrompt = (prompt: string) => {
+    setInput(prompt);
   };
 
   const handleClearChat = async () => {
@@ -140,7 +156,7 @@ const AIChatScreen: React.FC = () => {
             <View style={styles.headerLeft}>
               <View style={styles.avatarContainer}>
                 <LinearGradient
-                  colors={[COLORS.indigo[100], COLORS.white]}
+                  colors={[COLORS.indigo[50], COLORS.white]}
                   style={styles.avatar}
                 >
                   <Text style={styles.avatarText}>MM</Text>
@@ -168,6 +184,10 @@ const AIChatScreen: React.FC = () => {
           </Animated.View>
 
           {/* Messages */}
+          {messages.length <= 1 && (
+            <ChatPrompts onSelectPrompt={handleSelectPrompt} />
+          )}
+
           <Animated.FlatList
             ref={flatListRef}
             data={messages}
@@ -218,6 +238,21 @@ const AIChatScreen: React.FC = () => {
           </Animated.View>
         </KeyboardAvoidingView>
       </LinearGradient>
+
+      {/* Crisis Alert Modal */}
+      {crisisData && (
+        <CrisisAlertModal
+          visible={showCrisisAlert}
+          severity={crisisData.severity}
+          message={crisisData.message}
+          resources={crisisData.resources}
+          onClose={() => setShowCrisisAlert(false)}
+          onNavigateToCrisis={() => {
+            setShowCrisisAlert(false);
+            navigation.navigate('Crisis');
+          }}
+        />
+      )}
     </SafeAreaView>
   );
 };
@@ -258,7 +293,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 1,
-    borderColor: COLORS.indigo[200],
+    borderColor: COLORS.indigo[400],
     ...SHADOWS.soft,
   },
   avatarText: {

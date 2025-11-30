@@ -98,17 +98,25 @@ export const userStorage = {
     const value = await storageService.getItem<boolean>(KEYS.ONBOARDED);
     return value ?? false;
   },
+
+  async setDarkMode(enabled: boolean): Promise<void> {
+    return storageService.setItem('@mentalwell/darkMode', enabled);
+  },
+
+  async getDarkMode(): Promise<boolean | null> {
+    return storageService.getItem<boolean>('@mentalwell/darkMode');
+  },
 };
 
 export const moodStorage = {
-  async saveMoodEntry(entry: { date: string; mood: number; label: string }): Promise<void> {
+  async saveMoodEntry(entry: { date: string; mood: number; label: string; note?: string }): Promise<void> {
     const entries = await this.getMoodEntries();
     entries.push(entry);
     return storageService.setItem(KEYS.MOOD_ENTRIES, entries);
   },
 
-  async getMoodEntries(): Promise<Array<{ date: string; mood: number; label: string }>> {
-    const entries = await storageService.getItem<Array<{ date: string; mood: number; label: string }>>(
+  async getMoodEntries(): Promise<Array<{ date: string; mood: number; label: string; note?: string }>> {
+    const entries = await storageService.getItem<Array<{ date: string; mood: number; label: string; note?: string }>>(
       KEYS.MOOD_ENTRIES
     );
     return entries ?? [];

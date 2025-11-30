@@ -56,7 +56,7 @@ export const THEMES = [
   },
 ];
 
-// Common colors
+// Common colors - Light Mode
 export const COLORS = {
   white: '#FFFFFF',
   black: '#000000',
@@ -125,6 +125,75 @@ export const COLORS = {
   },
 };
 
+// Dark Mode Colors
+export const DARK_COLORS = {
+  white: '#FFFFFF',
+  black: '#000000',
+  slate: {
+    50: '#0F172A', // Inverted for dark mode
+    100: '#1E293B',
+    200: '#334155',
+    300: '#475569',
+    400: '#64748B',
+    500: '#94A3B8',
+    600: '#CBD5E1',
+    700: '#E2E8F0',
+    800: '#F1F5F9',
+    900: '#F8FAFC',
+  },
+  teal: {
+    50: '#042F2E',
+    100: '#134E4A',
+    200: '#115E59',
+    300: '#0F766E',
+    400: '#14B8A6',
+    500: '#2DD4BF',
+    600: '#5EEAD4',
+  },
+  red: {
+    50: '#450A0A',
+    100: '#7F1D1D',
+    500: '#EF4444',
+    600: '#F87171',
+  },
+  green: {
+    400: '#4ADE80',
+  },
+  blue: {
+    50: '#172554',
+    100: '#1E3A8A',
+    400: '#60A5FA',
+    500: '#3B82F6',
+    600: '#93C5FD',
+  },
+  indigo: {
+    50: '#1E1B4B',
+    400: '#818CF8',
+    500: '#6366F1',
+    600: '#A5B4FC',
+    900: '#E0E7FF',
+  },
+  purple: {
+    900: '#C4B5FD',
+  },
+  orange: {
+    50: '#431407',
+    400: '#FB923C',
+    500: '#F97316',
+  },
+  yellow: {
+    50: '#422006',
+    100: '#713F12',
+    400: '#FACC15',
+    700: '#FDE047',
+  },
+  pink: {
+    50: '#500724',
+    400: '#F472B6',
+    500: '#EC4899',
+  },
+};
+
 // Typography
 export const FONTS = {
   regular: 'System',
@@ -165,7 +234,7 @@ export const RADIUS = {
   full: 9999,
 };
 
-// Shadows
+// Shadows - Light Mode
 export const SHADOWS = {
   soft: {
     shadowColor: '#000',
@@ -185,6 +254,31 @@ export const SHADOWS = {
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 8 },
     shadowOpacity: 0.15,
+    shadowRadius: 16,
+    elevation: 8,
+  },
+};
+
+// Shadows - Dark Mode (more subtle)
+export const DARK_SHADOWS = {
+  soft: {
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 2,
+  },
+  medium: {
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.4,
+    shadowRadius: 12,
+    elevation: 4,
+  },
+  large: {
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.5,
     shadowRadius: 16,
     elevation: 8,
   },

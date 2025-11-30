@@ -26,22 +26,6 @@ const ToolsScreen: React.FC<ToolsScreenProps> = ({ navigation }) => {
       subtitle: 'Reduce anxiety instantly',
       icon: Wind,
       color: COLORS.teal,
-      gradient: [COLORS.teal[400], COLORS.teal[600]],
-      action: () => navigation.navigate('Exercises'),
-    },
-    {
-      id: 'journal',
-      title: 'Journaling',
-      subtitle: 'Clear your mind',
-      icon: BookOpen,
-      color: COLORS.indigo,
-      gradient: [COLORS.indigo[400], COLORS.indigo[600]],
-      action: () => console.log('Journal'), // Placeholder
-      locked: true,
-    },
-    {
-      id: 'grounding',
-      title: 'Grounding',
       subtitle: '5-4-3-2-1 Technique',
       icon: BrainCircuit,
       color: COLORS.orange,

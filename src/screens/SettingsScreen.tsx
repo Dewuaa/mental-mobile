@@ -13,7 +13,8 @@ import {
   ChevronRight, 
   Globe, 
   Share2,
-  Check
+  Check,
+  Moon
 } from 'lucide-react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useTheme, THEMES } from '../contexts/ThemeContext';
@@ -23,7 +24,8 @@ interface SettingsScreenProps {
 }
 
 const SettingsScreen: React.FC<SettingsScreenProps> = ({ navigation }) => {
-  const { currentTheme, setTheme } = useTheme();
+  const { currentTheme, setTheme, isDarkMode, toggleDarkMode, colors, shadows } = useTheme();
+
   
   const [notifications, setNotifications] = useState({
     daily: true,
@@ -57,7 +59,7 @@ const SettingsScreen: React.FC<SettingsScreenProps> = ({ navigation }) => {
         ]}>
           <Icon 
             size={18} 
-            color={isDestructive ? COLORS.red[500] : COLORS.slate[500]} 
+            color={isDestructive ? colors.red[500] : colors.slate[500]} 
           />
         </View>
         <Text style={[
@@ -69,7 +71,7 @@ const SettingsScreen: React.FC<SettingsScreenProps> = ({ navigation }) => {
       </View>
       <View style={styles.menuItemRight}>
         {value && <Text style={styles.menuItemValue}>{value}</Text>}
-        <ChevronRight size={16} color={COLORS.slate[300]} />
+        <ChevronRight size={16} color={colors.slate[300]} />
       </View>
     </TouchableOpacity>
   );
@@ -87,16 +89,16 @@ const SettingsScreen: React.FC<SettingsScreenProps> = ({ navigation }) => {
     ]}>
       <View style={styles.menuItemLeft}>
         <View style={styles.iconContainer}>
-          <Icon size={18} color={COLORS.slate[500]} />
+          <Icon size={18} color={colors.slate[500]} />
         </View>
         <Text style={styles.menuItemLabel}>{label}</Text>
       </View>
       <Switch
         value={value}
         onValueChange={onValueChange}
-        trackColor={{ false: COLORS.slate[200], true: COLORS.teal[500] }}
-        thumbColor={COLORS.white}
-        ios_backgroundColor={COLORS.slate[200]}
+        trackColor={{ false: colors.slate[200], true: colors.teal[500] }}
+        thumbColor={colors.white}
+        ios_backgroundColor={colors.slate[200]}
       />
     </View>
   );
@@ -118,7 +120,7 @@ const SettingsScreen: React.FC<SettingsScreenProps> = ({ navigation }) => {
           onPress={() => navigation.goBack()}
           style={styles.backButton}
         >
-          <ChevronLeft size={20} color={COLORS.slate[600]} />
+          <ChevronLeft size={20} color={colors.slate[600]} />
         </TouchableOpacity>
         <Text style={styles.title}>Settings</Text>
         <View style={{ width: 40 }} />
@@ -135,7 +137,7 @@ const SettingsScreen: React.FC<SettingsScreenProps> = ({ navigation }) => {
         <View style={styles.languageItem}>
           <View style={styles.menuItemLeft}>
             <View style={styles.iconContainer}>
-              <Globe size={18} color={COLORS.slate[500]} />
+              <Globe size={18} color={colors.slate[500]} />
             </View>
             <Text style={styles.menuItemLabel}>Language</Text>
           </View>
@@ -149,7 +151,7 @@ const SettingsScreen: React.FC<SettingsScreenProps> = ({ navigation }) => {
         <View style={styles.themeContainer}>
           <View style={styles.themeHeader}>
             <View style={styles.iconContainer}>
-              <Palette size={18} color={COLORS.slate[500]} />
+              <Palette size={18} color={colors.slate[500]} />
             </View>
             <Text style={styles.menuItemLabel}>App Theme</Text>
           </View>
@@ -175,11 +177,19 @@ const SettingsScreen: React.FC<SettingsScreenProps> = ({ navigation }) => {
                   {theme.name}
                 </Text>
                 {currentTheme.id === theme.id && (
-                  <Check size={16} color={COLORS.teal[600]} />
+                  <Check size={16} color={colors.teal[600]} />
                 )}
               </TouchableOpacity>
             ))}
           </View>
+        </View>
+        <View style={styles.toggleContainer}>
+          <ToggleItem
+            icon={Moon}
+            label="Dark Mode"
+            value={isDarkMode}
+            onValueChange={toggleDarkMode}
+          />
         </View>
 
         {/* Notifications */}

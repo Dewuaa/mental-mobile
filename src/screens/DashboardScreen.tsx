@@ -8,6 +8,7 @@ import {
   Image,
   Dimensions,
   Animated,
+  RefreshControl,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { COLORS, SPACING, RADIUS, FONTS, SHADOWS } from '../theme';
@@ -29,6 +30,7 @@ import { LottieAnimation } from '../components/LottieAnimation';
 import { ConfettiAnimation } from '../components/ConfettiAnimation';
 import { MoodChart } from '../components/MoodChart';
 import { BackgroundBlobs } from '../components/BackgroundBlobs';
+import { MoodNoteModal } from '../components/MoodNoteModal';
 import { useToast } from '../context/ToastContext';
 import { useTheme } from '../contexts/ThemeContext';
 
@@ -40,6 +42,8 @@ const DashboardScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
   const [selectedMood, setSelectedMood] = useState<number | null>(null);
   const [showConfetti, setShowConfetti] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
+  const [showMoodNoteModal, setShowMoodNoteModal] = useState(false);
+  const [pendingMoodLevel, setPendingMoodLevel] = useState<number | null>(null);
   const userName = 'Friend';
   const { showToast } = useToast();
 
@@ -73,15 +77,41 @@ const DashboardScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
     setSelectedMood(level);
     await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
     
+    // Show confetti
     setShowConfetti(true);
     setTimeout(() => setShowConfetti(false), 3000);
 
+    // Store pending mood and show note modal
+    setPendingMoodLevel(level);
+    setShowMoodNoteModal(true);
+  };
+
+  const handleSaveMoodNote = async (note: string) => {
+    if (pendingMoodLevel === null) return;
+
     await moodStorage.saveMoodEntry({
       date: new Date().toISOString(),
-      mood: level,
-      label: moodLabels[level - 1],
+      mood: pendingMoodLevel,
+      label: moodLabels[pendingMoodLevel - 1],
+      note: note || undefined,
     });
     
+    setShowMoodNoteModal(false);
+    setPendingMoodLevel(null);
+    showToast('success', note ? 'Mood & note saved!' : 'Mood tracked!');
+  };
+
+  const handleSkipMoodNote = async () => {
+    if (pendingMoodLevel === null) return;
+
+    await moodStorage.saveMoodEntry({
+      date: new Date().toISOString(),
+      mood: pendingMoodLevel,
+      label: moodLabels[pendingMoodLevel - 1],
+    });
+    
+    setShowMoodNoteModal(false);
+    setPendingMoodLevel(null);
     showToast('success', 'Mood tracked!');
   };
 
@@ -121,6 +151,13 @@ const DashboardScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
         style={styles.scrollView} 
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.scrollContent}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            tintColor={currentTheme.colors.primary}
+          />
+        }
       >
         {/* Header */}
         <Animated.View style={[styles.header, headerAnim]}>
@@ -247,7 +284,7 @@ const DashboardScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
 
           <TouchableOpacity style={styles.statCard} activeOpacity={0.8}>
             <View style={[styles.statIcon, { backgroundColor: COLORS.orange[50] }]}>
-              <Sparkles size={18} color={COLORS.orange[600]} />
+              <Sparkles size={18} color={COLORS.orange[500]} />
             </View>
             <Text style={styles.statValue}>12</Text>
             <Text style={styles.statLabel}>Sessions</Text>
@@ -256,6 +293,14 @@ const DashboardScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
 
         <View style={{ height: 100 }} />
       </ScrollView>
+
+      {/* Mood Note Modal */}
+      <MoodNoteModal
+        visible={showMoodNoteModal}
+        moodLabel={pendingMoodLevel ? moodLabels[pendingMoodLevel - 1] : ''}
+        onSave={handleSaveMoodNote}
+        onSkip={handleSkipMoodNote}
+      />
     </SafeAreaView>
   );
 };
